@@ -1,0 +1,24 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block content %}
+<!doctype html>
+    <div class="container">
+    <title>Uploader</title>
+    <h1>Upload mp3</h1>
+    {% if audio_path != null %}
+    <p>{{ audio_name }} </p>
+    <audio controls>
+        <source src="{{ audio_path }}" type="audio/mp3">
+    </audio>
+    {% endif %}
+    </div>
+    <div class="container">
+    {% if user_image != null %}
+    <img src="{{ user_image }}" alt="User Image">
+    {% endif %}
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value="Upload mp3">
+    </form>
+    </div>
+{% endblock %}
