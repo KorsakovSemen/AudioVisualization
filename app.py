@@ -46,7 +46,7 @@ def upload_file():
             hop_length = 512
             n_fft = 2048
             song = AudioSegment.from_file(audio_path, format="mp3")
-            wav_way = os.path.join('static', 'audio') + "/" + 'test.wav'
+            wav_way = os.path.join('static', 'audio') + "/" + filename[0::-4] + '.wav'
             song.export(wav_way, format="wav")
             filepath = app.config['UPLOAD_FOLDER'] + '/' + filename
             x, sr = librosa.load(wav_way)
