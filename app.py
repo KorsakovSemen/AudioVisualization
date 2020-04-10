@@ -9,7 +9,7 @@ import io
 from pydub.utils import which
 
 IMAGE_FOLDER = os.path.join('static', 'image')
-UPLOAD_FOLDER = os.path.join('static', 'audio')  # 'uploads'
+UPLOAD_FOLDER = os.path.join('uploads', 'audio')  # 'uploads'
 ALLOWED_EXTENSIONS = {'mp3'}
 AudioSegment.converter = which("ffmpeg")
 
@@ -46,7 +46,7 @@ def upload_file():
             hop_length = 512
             n_fft = 2048
             song = AudioSegment.from_file(audio_path, format="mp3")
-            wav_way = os.path.join('static', 'audio') + "/" + filename[0::-4] + '.wav'
+            wav_way = os.path.join('uploads', 'audio') + "/" + filename[0::-4] + '.wav'
             song.export(wav_way, format="wav")
             filepath = app.config['UPLOAD_FOLDER'] + '/' + filename
             x, sr = librosa.load(wav_way)
