@@ -1,16 +1,17 @@
 import os
-
+from pydub import AudioSegment
 from flask import Flask, flash, request, redirect, url_for, send_file, render_template
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import librosa, librosa.display
 import matplotlib.pyplot as plt
 import io
-from pydub import AudioSegment
+from pydub.utils import which
 
 IMAGE_FOLDER = os.path.join('static', 'image')
 UPLOAD_FOLDER = os.path.join('static', 'audio')  # 'uploads'
 ALLOWED_EXTENSIONS = {'mp3'}
+AudioSegment.converter = which("ffmpeg")
 
 app = Flask(__name__)
 
@@ -44,9 +45,9 @@ def upload_file():
             app.config['UPLOAD_FOLDER'] = IMAGE_FOLDER
             hop_length = 512
             n_fft = 2048
-            song = AudioSegment.from_mp3(audio_path)
-            wav_way = app.config['UPLOAD_FOLDER'] + 'test.wav'
-            song.export(wav_way)
+            song = AudioSegment.from_file(audio_path, format="mp3")
+            wav_way = os.path.join('static', 'audio') + "/" + 'test.wav'
+            song.export(wav_way, format="wav")
             filepath = app.config['UPLOAD_FOLDER'] + '/' + filename
             x, sr = librosa.load(wav_way)
             X = librosa.stft(x, n_fft=n_fft, hop_length=hop_length)
@@ -57,7 +58,7 @@ def upload_file():
             plt.colorbar(format='%+2.0f dB')
             bytes_image = io.BytesIO()
             fname = filename[:-4] + ".png"
-            plt.savefig(app.config['UPLOAD_FOLDER'] + "/" + fname)  # app.config['UPLOAD_FOLDER'] + "/" + fname)
+            plt.savefig(os.path.join('static', 'image') + "/" + fname)  # app.config['UPLOAD_FOLDER'] + "/" + fname)
             bytes_image.seek(0)
             full_filename = os.path.join(app.config['UPLOAD_FOLDER'], fname)
             return render_template("mp3.html", user_image=full_filename, audio_path=audio_path, audio_name=filename)
